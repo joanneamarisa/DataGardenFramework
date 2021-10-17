@@ -12,16 +12,16 @@ function preload() {
 function setup() {
   totalRows = table.getRowCount();
   today = date;
-  createCanvas(800, 800);
+  createCanvas(windowWidth, windowHeight);
 }
 
 function draw() {
   background(200);
 
   // ground
-  let Ground = 750;
+  let Ground = windowHeight - 30;
   fill(0);
-  rect(0, Ground, 800, 800);
+  rect(0, Ground, windowWidth, windowHeight);
 
   // 'for' loop for reaading our data by row
   for (let i=0; i < totalRows; i++) {
@@ -34,21 +34,21 @@ function draw() {
      // 'if' function for what happens when we reach top of stem
     if (today!=date) {
       fill("red");
-      ellipse(flowerPos, Ground-y, 30, 30);
+      let flowerY = map((Ground-y), Ground-745, Ground, 30, Ground);
+
+      ellipse(flowerPos, flowerY, 30, 30);
       
       if (JoCount >= (JoCount+StefCount)/2) {
          fill("white");
-         ellipse(flowerPos, Ground-y, 20, 20);
+         ellipse(flowerPos, flowerY, 20, 20);
       } else if (StefCount >= (JoCount+StefCount)/2) {
         fill("black");
-        ellipse(flowerPos, Ground-y, 20, 20);
+        ellipse(flowerPos, flowerY, 20, 20);
       } else if (JoCount == StefCount) {
         fill("blue");
-        ellipse(flowerPos, Ground-y, 30, 30);
+        ellipse(flowerPos, flowerY, 30, 30);
       }
-      
-      console.log(JoCount+"."+StefCount);
-      
+            
       y = 0;
       JoCount = 0;
       StefCount = 0;
@@ -61,18 +61,23 @@ function draw() {
 
     // date labels
     let stemLength = Ground - y;
+    let newStem = map(stemLength, Ground-745, Ground, 30, Ground);
+    console.log(stemLength + "/" + newStem);
+
     fill("white");
     text(date, datePos, Ground);
     
     // stems
-    line(datePos, Ground, datePos, stemLength);
+    stroke("blue");
+    line(datePos, Ground, datePos, newStem);
 
     // leaves
+    stroke(0);
     let Person = table.get(i, "SENDER");
 
     if (Person === "Joanne Amarisa") {
       fill("yellow");
-      ellipse (datePos, stemLength, 10, 10);
+      ellipse (datePos, newStem, 8, 8);
       JoCount++;
       
       // hover function
@@ -88,7 +93,7 @@ function draw() {
   }
     } else if (Person === "Stefeny Cheng") {
       fill("orange");
-      ellipse(datePos, stemLength, 10, 10);
+      ellipse(datePos, newStem, 8, 8);
       StefCount++;
       
       var Stef = {
@@ -106,6 +111,7 @@ function draw() {
   //end of 'for' loop
   }
 //end of draw
+
 }
 
 function textHoverJo() {
